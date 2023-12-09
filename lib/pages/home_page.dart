@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/providers/location_provider.dart';
 import 'package:provider/provider.dart';
@@ -13,9 +15,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-          child: Center(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        title: const Text("Get location"),
+        centerTitle: true,
+      ),
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -26,18 +31,25 @@ class _HomePageState extends State<HomePage> {
             ),
             GestureDetector(
               onTap: () {
+                log("Feching location");
                 context.read<LocationProvider>().getCurrentLocation();
               },
               child: Container(
                 height: 50,
                 width: 150,
                 decoration: const BoxDecoration(color: Colors.amber),
-                child: const Center(child: Text('Get location')),
+                child: Center(
+                  child: context.watch<LocationProvider>().feaching == false
+                      ? const Text('Get location')
+                      : const CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                ),
               ),
             )
           ],
         ),
-      )),
+      ),
     );
   }
 }
